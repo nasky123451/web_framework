@@ -10,6 +10,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  ListItemButton,
   IconButton,
   Divider,
 } from "@mui/material";
@@ -39,9 +40,11 @@ const Dashboard: React.FC = () => {
           { text: "Settings", icon: <SettingsIcon /> },
           { text: "Logout", icon: <LogoutIcon /> },
         ].map(({ text, icon }, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{icon}</ListItemIcon>
-            <ListItemText primary={text} />
+          <ListItem key={text} disablePadding>
+            <ListItemButton>
+              <ListItemIcon>{icon}</ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItemButton>
           </ListItem>
         ))}
       </List>
