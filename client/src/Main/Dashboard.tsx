@@ -1,132 +1,78 @@
-import React from "react";
+import React, { useEffect, useState } from 'react';
+import Grid from '@mui/material/GridLegacy';
 import {
-  AppBar,
-  Toolbar,
   Typography,
-  CssBaseline,
+  CircularProgress,
+  Card,
+  CardContent,
+  CardHeader,
+  Avatar,
   Box,
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  ListItemButton,
-  IconButton,
-  Divider,
-} from "@mui/material";
-import {
-  Menu as MenuIcon,
-  Dashboard as DashboardIcon,
-  Settings as SettingsIcon,
-  Logout as LogoutIcon,
-} from "@mui/icons-material";
+} from '@mui/material';
+import { blue, green, purple } from '@mui/material/colors';
+import Topbar from './components/Topbar';
+import Sidebar from './components/Sidebar';
 
-const drawerWidth = 240;
+const DashboardPage: React.FC = () => {
+  const [data, setData] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
 
-const Dashboard: React.FC = () => {
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  useEffect(() => {
+    async function fetchData() {
+      return ['Alice', 'Bob', 'Carol'];
+    }
+    fetchData().then((d) => {
+      setData(d);
+      setLoading(false);
+    });
+  }, []);
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+  if (loading) return <CircularProgress />;
 
-  const drawer = (
-    <div>
-      <Toolbar />
-      <Divider />
-      <List>
-        {[
-          { text: "Dashboard", icon: <DashboardIcon /> },
-          { text: "Settings", icon: <SettingsIcon /> },
-          { text: "Logout", icon: <LogoutIcon /> },
-        ].map(({ text, icon }, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>{icon}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </div>
-  );
+  const colors = [blue[500], green[500], purple[500]];
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
-        }}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            My Dashboard
+    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+      {/* 側邊欄 */}
+      <Sidebar />
+
+      {/* 主體區域，包含 Topbar 與內容 */}
+      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+        {/* 頂欄 */}
+        <Topbar />
+
+        {/* 內容主體，放卡片 */}
+        <Box component="main" sx={{ p: 3, flexGrow: 1, bgcolor: '#f5f5f5' }}>
+          <Typography variant="h4" gutterBottom>
+            Dashboard Overview
           </Typography>
-        </Toolbar>
-      </AppBar>
 
-      {/* Drawer 區塊 */}
-      <Box
-        component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-      >
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true, // mobile 性能優化
-          }}
-          sx={{
-            display: { xs: "block", sm: "none" },
-            "& .MuiDrawer-paper": { width: drawerWidth },
-          }}
-        >
-          {drawer}
-        </Drawer>
-
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: "none", sm: "block" },
-            "& .MuiDrawer-paper": { width: drawerWidth, boxSizing: "border-box" },
-          }}
-          open
-        >
-          {drawer}
-        </Drawer>
-      </Box>
-
-      {/* 主內容區 */}
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-        }}
-      >
-        <Toolbar />
-        <Typography variant="h4" gutterBottom>
-          Welcome to the Dashboard
-        </Typography>
-        <Typography>
-          這裡可以顯示你的圖表、報表、資料總覽等資訊。
-        </Typography>
+          <Grid container spacing={3}>
+            {data.map((item, index) => (
+              <Grid item xs={12} sm={6} md={4} key={index}>
+                <Card elevation={3} sx={{ borderRadius: 3 }}>
+                  <CardHeader
+                    avatar={
+                      <Avatar sx={{ bgcolor: colors[index % colors.length] }}>
+                        {item[0]}
+                      </Avatar>
+                    }
+                    title={item}
+                    subheader={`資料分析項目 #${index + 1}`}
+                  />
+                  <CardContent>
+                    <Typography variant="body2" color="text.secondary">
+                      這是 {item} 的詳細分析資訊，可以根據需要自訂內容呈現方式。
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
       </Box>
     </Box>
   );
 };
 
-export default Dashboard;
+export default DashboardPage;
