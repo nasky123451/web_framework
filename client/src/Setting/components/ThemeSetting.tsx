@@ -10,10 +10,12 @@ import {
   FormControlLabel,
   Slider,
 } from '@mui/material';
-import { ChromePicker } from 'react-color';
-import { useThemeContext } from '../../context/ThemeContext';
+import Cookies from 'js-cookie';
+import { useThemeContext, getBackgroundCss } from '../../context/ThemeContext';
+import { TechHexColorPicker } from './TechHexColorPicker';
+import styles from './ThemeSetting.module.css'; // <-- 引用 CSS Module
 
-type ThemeParts = 'sidebar' | 'topbar' | 'box';
+type ThemeParts = 'sidebar' | 'topbar' | 'box' | 'text' | 'background';
 
 const ThemeSetting: React.FC = () => {
   const { themeColors, setThemeColors } = useThemeContext();
@@ -26,15 +28,19 @@ const ThemeSetting: React.FC = () => {
 
   useEffect(() => {
     const part = themeColors[selectedPart];
-    if (part.gradient.enabled) {
+    if (!part) return;
+
+    const gradient = part.gradient;
+
+    if (gradient?.enabled && gradient.stops?.length >= 2) {
       setGradientEnabled(true);
-      setColorFrom(part.gradient.stops[0].color || '#1976d2');
-      setColorTo(part.gradient.stops[part.gradient.stops.length - 1].color || '#42a5f5');
-      setAngle(part.gradient.angle || 90);
+      setColorFrom(gradient.stops[0].color);
+      setColorTo(gradient.stops[1].color);
+      setAngle(gradient.angle || 90);
     } else {
       setGradientEnabled(false);
       setColorFrom(part.color || '#1976d2');
-      setColorTo('#42a5f5');
+      setColorTo(part.color || '#42a5f5');
       setAngle(90);
     }
   }, [selectedPart, themeColors]);
@@ -43,12 +49,16 @@ const ThemeSetting: React.FC = () => {
     setThemeColors((prev) => ({
       ...prev,
       [selectedPart]: {
-        ...prev[selectedPart],
+        color: newFrom,
         gradient: {
           enabled: true,
           from: newFrom,
           to: newTo,
           angle: newAngle,
+          stops: [
+            { offset: 0, color: newFrom },
+            { offset: 1, color: newTo },
+          ],
         },
       },
     }));
@@ -58,114 +68,153 @@ const ThemeSetting: React.FC = () => {
     setThemeColors((prev) => ({
       ...prev,
       [selectedPart]: {
-        ...prev[selectedPart],
         color: newColor,
         gradient: {
           enabled: false,
-          from: '',
-          to: '',
+          from: newColor,
+          to: newColor,
           angle: 90,
+          stops: [
+            { offset: 0, color: newColor },
+            { offset: 1, color: newColor },
+          ],
         },
       },
     }));
   };
 
+  useEffect(() => {
+    Cookies.set('themeColors', JSON.stringify(themeColors), { expires: 365 });
+  }, [themeColors]);
+
   const toggleGradient = (e: React.ChangeEvent<HTMLInputElement>) => {
     const enabled = e.target.checked;
     setGradientEnabled(enabled);
-    if (!enabled) {
-      updateSingleColor(colorFrom);
-    } else {
+
+    if (enabled) {
       updateGradient(colorFrom, colorTo, angle);
+    } else {
+      updateSingleColor(colorFrom);
     }
   };
 
+  const onSingleColorChange = (color: string) => {
+    setColorFrom(color);
+    updateSingleColor(color);
+  };
+
+  const onGradientFromChange = (color: string) => {
+    setColorFrom(color);
+    updateGradient(color, colorTo, angle);
+  };
+
+  const onGradientToChange = (color: string) => {
+    setColorTo(color);
+    updateGradient(colorFrom, color, angle);
+  };
+
   return (
-    <Box sx={{ maxWidth: 600 }}>
-      <Typography variant="h5" gutterBottom>
+    <Box className={styles.themeContainer} style={{ color: getBackgroundCss(themeColors.text) }}>
+      <Typography variant="h4" gutterBottom className={styles.title}>
         主題顏色設定
       </Typography>
 
-      <FormControl fullWidth sx={{ mb: 3 }}>
-        <InputLabel id="select-part-label">調整項目</InputLabel>
+      <FormControl fullWidth className={styles.formControl}>
+        <InputLabel id="select-part-label" sx={{ color: '#a0c3d9 !important' }}>
+          調整項目
+        </InputLabel>
         <Select
           labelId="select-part-label"
+          sx={{ color: '#00ffe1', fontFamily: "'Orbitron', sans-serif" }}
           value={selectedPart}
           label="調整項目"
           onChange={(e) => setSelectedPart(e.target.value as ThemeParts)}
+          classes={{
+            root: styles.selectRoot,
+            outlined: styles.selectOutlined,
+            icon: styles.selectIcon,
+          }}
+          MenuProps={{
+            PaperProps: {
+              sx: {
+                backgroundColor: '#001011',
+                color: '#00ffe1',
+                fontFamily: "'Orbitron', sans-serif",
+              },
+            },
+          }}
         >
           <MenuItem value="sidebar">Sidebar</MenuItem>
           <MenuItem value="topbar">Topbar</MenuItem>
           <MenuItem value="box">Box</MenuItem>
+          <MenuItem value="text">Text</MenuItem>
+          <MenuItem value="background">Background</MenuItem>
         </Select>
       </FormControl>
 
       <FormControlLabel
-        control={<Switch checked={gradientEnabled} onChange={toggleGradient} />}
+        control={
+          <Switch
+            checked={gradientEnabled}
+            onChange={toggleGradient}
+            classes={{
+              switchBase: styles.switchBase,
+              checked: styles.switchChecked,
+              track: gradientEnabled ? styles.switchTrackChecked : '',
+            }}
+          />
+        }
         label="啟用漸層"
+        className={styles.formControlLabel}
       />
 
       {gradientEnabled ? (
         <>
-          <Box sx={{ mt: 2 }}>
-            <Typography variant="subtitle1" gutterBottom>
+          <Box>
+            <Typography variant="subtitle1" className={styles.subtitle}>
               漸層起始色
             </Typography>
-            <ChromePicker
-              color={colorFrom}
-              onChangeComplete={(color) => {
-                setColorFrom(color.hex);
-                updateGradient(color.hex, colorTo, angle);
-              }}
-              disableAlpha
-            />
+            <TechHexColorPicker color={colorFrom} onChange={onGradientFromChange} />
           </Box>
 
-          <Box sx={{ mt: 3 }}>
-            <Typography variant="subtitle1" gutterBottom>
+          <Box>
+            <Typography variant="subtitle1" className={styles.subtitle}>
               漸層結束色
             </Typography>
-            <ChromePicker
-              color={colorTo}
-              onChangeComplete={(color) => {
-                setColorTo(color.hex);
-                updateGradient(colorFrom, color.hex, angle);
-              }}
-              disableAlpha
-            />
+            <TechHexColorPicker color={colorTo} onChange={onGradientToChange} />
           </Box>
 
           <Box sx={{ mt: 3 }}>
-            <Typography variant="subtitle1" gutterBottom>
+            <Typography variant="subtitle1" className={styles.subtitle}>
               漸層角度 ({angle}°)
             </Typography>
             <Slider
               min={0}
               max={360}
               value={angle}
-              onChange={(_e, val) => {
+              onChange={(_, val) => {
                 if (typeof val === 'number') {
                   setAngle(val);
                   updateGradient(colorFrom, colorTo, val);
                 }
               }}
               valueLabelDisplay="auto"
+              classes={{
+                root: styles.sliderRoot,
+                thumb: styles.sliderThumb,
+                rail: styles.sliderRail,
+                track: styles.sliderTrack,
+                valueLabel: styles.sliderValueLabel,
+              }}
             />
           </Box>
         </>
       ) : (
-        <Box sx={{ mt: 2 }}>
-          <Typography variant="subtitle1" gutterBottom>
+        <Box>
+          <Typography variant="subtitle1" className={styles.subtitle}>
             單色顏色
           </Typography>
-          <ChromePicker
-            color={colorFrom}
-            onChangeComplete={(color) => {
-              setColorFrom(color.hex);
-              updateSingleColor(color.hex);
-            }}
-            disableAlpha
-          />
+          <TechHexColorPicker color={colorFrom} onChange={onSingleColorChange} />
         </Box>
       )}
     </Box>

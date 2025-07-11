@@ -10,14 +10,22 @@ import {
 } from "@mui/material";
 import { NavLink } from "react-router-dom";
 
+import { useThemeContext, getBackgroundCss } from "../../context/ThemeContext";
+
 const Sidebar: React.FC = () => {
+  const { themeColors } = useThemeContext();
+
   return (
     <Drawer
       variant="permanent"
       sx={{
         width: 240,
         flexShrink: 0,
-        [`& .MuiDrawer-paper`]: { width: 240, boxSizing: "border-box" },
+        [`& .MuiDrawer-paper`]: {
+          width: 240,
+          boxSizing: "border-box",
+          background: getBackgroundCss(themeColors.sidebar), // ✅ 放這裡才會生效
+        },
       }}
     >
       <Toolbar />

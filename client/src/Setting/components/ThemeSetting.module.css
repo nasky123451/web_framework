@@ -1,0 +1,111 @@
+.themeContainer {
+    padding: 24px;
+    max-width: 480px;
+    margin: 0 auto;
+    color: #a0c3d9; /* 柔和藍灰色文字 */
+    background: linear-gradient(135deg, #121921, #1c2533);
+    border-radius: 12px;
+    box-shadow:
+      0 4px 8px rgba(0, 0, 0, 0.6),
+      inset 0 0 15px rgba(33, 55, 75, 0.8);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    user-select: none;
+  }
+  
+  .title {
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-align: center;
+    margin-bottom: 32px;
+    color: #9bb8d9;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+  }
+  
+  .formControl {
+    margin-bottom: 24px;
+  }
+  
+  .formControlLabel {
+    color: #a0c3d9;
+    font-weight: 500;
+  }
+  
+  .selectLabel {
+    color: #cee7f6;
+  }
+  
+  .selectRoot {
+    color: #a0c3d9;
+  }
+  
+  .selectOutlined {
+    border-color: #3a5068 !important;
+    border-width: 1.5px !important;
+    background-color: #15202b;
+    transition: border-color 0.3s ease;
+  }
+  
+  .selectOutlined:hover,
+  .selectOutlined.Mui-focused {
+    border-color: #6699cc !important;
+    box-shadow: 0 0 8px #6699ccaa !important;
+  }
+  
+  .selectIcon {
+    color: #a0c3d9 !important;
+  }
+  
+  .switchBase {
+    color: #a0c3d9 !important;
+  }
+  
+  .switchChecked {
+    color: #6699cc !important;
+  }
+  
+  .switchTrackChecked {
+    background-color: #6699cc !important;
+  }
+  
+  .subtitle {
+    color: #9bb8d9;
+    font-weight: 600;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  }
+  
+  .sliderRoot {
+    color: #6699cc !important;
+  }
+  
+  .sliderThumb {
+    border: 2px solid #3a5068 !important;
+    background-color: #1c2a3a !important;
+    box-shadow: none !important;
+    transition: border-color 0.3s ease;
+  }
+  
+  .sliderThumb:hover,
+  .sliderThumb.Mui-active {
+    border-color: #6699cc !important;
+    box-shadow: 0 0 8px #6699cc88 !important;
+  }
+  
+  .sliderRail {
+    opacity: 0.3 !important;
+    background-color: #3a5068 !important;
+  }
+  
+  .sliderTrack {
+    background-color: #6699cc !important;
+  }
+  
+  .sliderValueLabel {
+    background-color: #3a5068 !important;
+    color: #a0c3d9 !important;
+    font-weight: 600 !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+  }
+  

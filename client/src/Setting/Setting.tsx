@@ -9,6 +9,7 @@ import {
   Divider,
   Paper,
 } from "@mui/material";
+import { useThemeContext, getBackgroundCss } from "../context/ThemeContext";
 
 import FullHeightFlexProps from "./FullHeightFlex.tsx";
 
@@ -18,6 +19,8 @@ const menuItems = [
 ];
 
 const SettingPage: React.FC = () => {
+  const { themeColors } = useThemeContext();
+
   return (
     <FullHeightFlexProps>
       {/* 左側選單 */}
@@ -34,6 +37,7 @@ const SettingPage: React.FC = () => {
           boxShadow: "2px 0 5px rgba(0,0,0,0.05)",
           overflowY: "auto",
           color: "text.primary",
+          background: getBackgroundCss(themeColors.sidebar),
         }}
       >
         <Typography
@@ -83,7 +87,7 @@ const SettingPage: React.FC = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "flex-start",
-          // 內部用 Paper 當白色卡片容器
+          background: getBackgroundCss(themeColors.background),
         }}
       >
         <Paper
@@ -95,6 +99,7 @@ const SettingPage: React.FC = () => {
             borderRadius: 3,
             bgcolor: "background.paper",
             boxShadow: "0 8px 16px rgba(0,0,0,0.12)",
+            background: getBackgroundCss(themeColors.box),
           }}
         >
           <Outlet />
