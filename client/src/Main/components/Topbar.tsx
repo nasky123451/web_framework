@@ -10,11 +10,15 @@ const Topbar: React.FC = () => {
   const { themeColors } = useThemeContext();
 
   const handleSettingsClick = () => {
-    window.open("/setting", "_blank", "noopener,noreferrer");
+    window.open("/settings", "_blank", "noopener,noreferrer");
   };
 
   return (
-    <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, background: getBackgroundCss(themeColors.topbar) }} >
+    <AppBar position="fixed" sx={{ 
+      zIndex: (theme) => theme.zIndex.drawer + 1, 
+      background: getBackgroundCss(themeColors.topbar),
+      color: getBackgroundCss(themeColors.text),
+       }} >
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
         <Typography variant="h6" noWrap>
           My App

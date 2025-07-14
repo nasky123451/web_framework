@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import debounce from 'lodash.debounce';
 import {
   Box,
   Typography,
@@ -13,7 +14,7 @@ import {
 import Cookies from 'js-cookie';
 import { useThemeContext, getBackgroundCss } from '../../context/ThemeContext';
 import { TechHexColorPicker } from './TechHexColorPicker';
-import styles from './ThemeSetting.module.css'; // <-- 引用 CSS Module
+import styles from './ThemeSetting.module.css';
 
 type ThemeParts = 'sidebar' | 'topbar' | 'box' | 'text' | 'background';
 
@@ -22,10 +23,13 @@ const ThemeSetting: React.FC = () => {
 
   const [selectedPart, setSelectedPart] = useState<ThemeParts>('sidebar');
   const [gradientEnabled, setGradientEnabled] = useState(false);
-  const [colorFrom, setColorFrom] = useState('#1976d2');
-  const [colorTo, setColorTo] = useState('#42a5f5');
-  const [angle, setAngle] = useState(90);
 
+  // ✅ local 狀態避免 flicker
+  const [localColorFrom, setLocalColorFrom] = useState('#1976d2');
+  const [localColorTo, setLocalColorTo] = useState('#42a5f5');
+  const [localAngle, setLocalAngle] = useState(90);
+
+  // 初始化每個元件的設定
   useEffect(() => {
     const part = themeColors[selectedPart];
     if (!part) return;
@@ -34,49 +38,49 @@ const ThemeSetting: React.FC = () => {
 
     if (gradient?.enabled && gradient.stops?.length >= 2) {
       setGradientEnabled(true);
-      setColorFrom(gradient.stops[0].color);
-      setColorTo(gradient.stops[1].color);
-      setAngle(gradient.angle || 90);
+      setLocalColorFrom(gradient.stops[0].color);
+      setLocalColorTo(gradient.stops[1].color);
+      setLocalAngle(gradient.angle || 90);
     } else {
       setGradientEnabled(false);
-      setColorFrom(part.color || '#1976d2');
-      setColorTo(part.color || '#42a5f5');
-      setAngle(90);
+      setLocalColorFrom(part.color || '#1976d2');
+      setLocalColorTo(part.color || '#42a5f5');
+      setLocalAngle(90);
     }
   }, [selectedPart, themeColors]);
 
-  const updateGradient = (newFrom: string, newTo: string, newAngle: number) => {
+  const updateGradient = (from: string, to: string, angle: number) => {
     setThemeColors((prev) => ({
       ...prev,
       [selectedPart]: {
-        color: newFrom,
+        color: from,
         gradient: {
           enabled: true,
-          from: newFrom,
-          to: newTo,
-          angle: newAngle,
+          from,
+          to,
+          angle,
           stops: [
-            { offset: 0, color: newFrom },
-            { offset: 1, color: newTo },
+            { offset: 0, color: from },
+            { offset: 1, color: to },
           ],
         },
       },
     }));
   };
 
-  const updateSingleColor = (newColor: string) => {
+  const updateSingleColor = (color: string) => {
     setThemeColors((prev) => ({
       ...prev,
       [selectedPart]: {
-        color: newColor,
+        color,
         gradient: {
           enabled: false,
-          from: newColor,
-          to: newColor,
+          from: color,
+          to: color,
           angle: 90,
           stops: [
-            { offset: 0, color: newColor },
-            { offset: 1, color: newColor },
+            { offset: 0, color },
+            { offset: 1, color },
           ],
         },
       },
@@ -87,30 +91,18 @@ const ThemeSetting: React.FC = () => {
     Cookies.set('themeColors', JSON.stringify(themeColors), { expires: 365 });
   }, [themeColors]);
 
+  // ✅ debounce 更新 context
+  const debouncedUpdateSingleColor = useRef(debounce(updateSingleColor, 150)).current;
+  const debouncedUpdateGradient = useRef(debounce(updateGradient, 150)).current;
+
   const toggleGradient = (e: React.ChangeEvent<HTMLInputElement>) => {
     const enabled = e.target.checked;
     setGradientEnabled(enabled);
-
     if (enabled) {
-      updateGradient(colorFrom, colorTo, angle);
+      debouncedUpdateGradient(localColorFrom, localColorTo, localAngle);
     } else {
-      updateSingleColor(colorFrom);
+      debouncedUpdateSingleColor(localColorFrom);
     }
-  };
-
-  const onSingleColorChange = (color: string) => {
-    setColorFrom(color);
-    updateSingleColor(color);
-  };
-
-  const onGradientFromChange = (color: string) => {
-    setColorFrom(color);
-    updateGradient(color, colorTo, angle);
-  };
-
-  const onGradientToChange = (color: string) => {
-    setColorTo(color);
-    updateGradient(colorFrom, color, angle);
   };
 
   return (
@@ -125,15 +117,9 @@ const ThemeSetting: React.FC = () => {
         </InputLabel>
         <Select
           labelId="select-part-label"
-          sx={{ color: '#00ffe1', fontFamily: "'Orbitron', sans-serif" }}
           value={selectedPart}
-          label="調整項目"
           onChange={(e) => setSelectedPart(e.target.value as ThemeParts)}
-          classes={{
-            root: styles.selectRoot,
-            outlined: styles.selectOutlined,
-            icon: styles.selectIcon,
-          }}
+          sx={{ color: '#00ffe1', fontFamily: "'Orbitron', sans-serif" }}
           MenuProps={{
             PaperProps: {
               sx: {
@@ -174,28 +160,40 @@ const ThemeSetting: React.FC = () => {
             <Typography variant="subtitle1" className={styles.subtitle}>
               漸層起始色
             </Typography>
-            <TechHexColorPicker color={colorFrom} onChange={onGradientFromChange} />
+            <TechHexColorPicker
+              color={localColorFrom}
+              onChange={(color) => {
+                setLocalColorFrom(color);
+                debouncedUpdateGradient(color, localColorTo, localAngle);
+              }}
+            />
           </Box>
 
           <Box>
             <Typography variant="subtitle1" className={styles.subtitle}>
               漸層結束色
             </Typography>
-            <TechHexColorPicker color={colorTo} onChange={onGradientToChange} />
+            <TechHexColorPicker
+              color={localColorTo}
+              onChange={(color) => {
+                setLocalColorTo(color);
+                debouncedUpdateGradient(localColorFrom, color, localAngle);
+              }}
+            />
           </Box>
 
           <Box sx={{ mt: 3 }}>
             <Typography variant="subtitle1" className={styles.subtitle}>
-              漸層角度 ({angle}°)
+              漸層角度 ({localAngle}°)
             </Typography>
             <Slider
               min={0}
               max={360}
-              value={angle}
+              value={localAngle}
               onChange={(_, val) => {
                 if (typeof val === 'number') {
-                  setAngle(val);
-                  updateGradient(colorFrom, colorTo, val);
+                  setLocalAngle(val);
+                  debouncedUpdateGradient(localColorFrom, localColorTo, val);
                 }
               }}
               valueLabelDisplay="auto"
@@ -214,7 +212,13 @@ const ThemeSetting: React.FC = () => {
           <Typography variant="subtitle1" className={styles.subtitle}>
             單色顏色
           </Typography>
-          <TechHexColorPicker color={colorFrom} onChange={onSingleColorChange} />
+          <TechHexColorPicker
+            color={localColorFrom}
+            onChange={(color) => {
+              setLocalColorFrom(color);
+              debouncedUpdateSingleColor(color);
+            }}
+          />
         </Box>
       )}
     </Box>
