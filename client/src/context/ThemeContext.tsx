@@ -13,6 +13,7 @@ export interface MyGradient {
   to: string;
   angle: number;
   stops: GradientStop[];
+  type?: 'linear' | 'radial' | 'repeating-linear';
 }
 
 export interface ColorPart {
@@ -75,12 +76,24 @@ export const useThemeContext = () => useContext(ThemeContext);
 
 // 背景樣式轉換
 export function getBackgroundCss(colorPart: ColorPart): string {
-  if (colorPart.gradient.enabled) {
-    const g = colorPart.gradient;
-    const fromColor = g.stops[0]?.color ?? g.from ?? colorPart.color;
-    const toColor = g.stops[g.stops.length - 1]?.color ?? g.to ?? colorPart.color;
-    return `linear-gradient(${g.angle}deg, ${fromColor}, ${toColor})`;
+  const { gradient } = colorPart;
+
+  if (gradient?.enabled && gradient.stops.length >= 2) {
+    const stopsStr = gradient.stops
+      .map((stop) => `${stop.color} ${Math.round(stop.offset * 100)}%`)
+      .join(', ');
+
+    switch (gradient.type) {
+      case 'radial':
+        return `radial-gradient(circle, ${stopsStr})`;
+      case 'repeating-linear':
+        return `repeating-linear-gradient(${gradient.angle}deg, ${stopsStr})`;
+      case 'linear':
+      default:
+        return `linear-gradient(${gradient.angle}deg, ${stopsStr})`;
+    }
   }
+
   return colorPart.color;
 }
 
