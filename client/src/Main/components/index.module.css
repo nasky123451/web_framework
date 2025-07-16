@@ -12,3 +12,72 @@
     background: transparent !important;
   }
   
+
+  .container {
+    overflow-x: auto;
+    max-width: 100%;
+  }
+  
+  .gridContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px;
+    min-height: 200px;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  
+  .gridItem {
+    user-select: none;
+    touch-action: none;
+    /* 固定大小已由 inline style 控制 */
+  }
+  
+  .gridItemDragging {
+    transform: scale(1.02);
+    z-index: 1300;
+    transition: none;
+  }
+  
+  .card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease, border 0.3s ease;
+  }
+  
+  .cardDragging {
+    border: 2px dashed #1976d2 !important;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  .dragHandle {
+    cursor: grab;
+  }
+
+  .cardContent {
+    flex-grow: 1;
+  }
+  
+  .resizeHandle {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 4px;
+    bottom: 4px;
+    cursor: nwse-resize;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+  }
+  
+  .placeholder {
+    border: 2px dashed #1976d2;
+    border-radius: 8px;
+    background-color: rgba(25, 118, 210, 0.15);
+    pointer-events: none;
+    transition: all 0.3s ease;
+  }
+  

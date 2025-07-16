@@ -25,7 +25,9 @@ export interface ThemeColors {
   sidebar: ColorPart;
   topbar: ColorPart;
   box: ColorPart;
+  boxBackground: ColorPart;
   text: ColorPart;
+  title: ColorPart;
   background: ColorPart;
 }
 
@@ -34,7 +36,7 @@ interface ThemeContextType {
   setThemeColors: React.Dispatch<React.SetStateAction<ThemeColors>>;
 }
 
-const defaultColor = "#1976d2";
+const defaultColor = "#ffffff";
 
 const createDefaultGradient = (baseColor: string): MyGradient => ({
   enabled: false,
@@ -51,7 +53,9 @@ const defaultColors: ThemeColors = {
   sidebar: { color: defaultColor, gradient: createDefaultGradient(defaultColor) },
   topbar: { color: defaultColor, gradient: createDefaultGradient(defaultColor) },
   box: { color: defaultColor, gradient: createDefaultGradient(defaultColor) },
+  boxBackground: { color: defaultColor, gradient: createDefaultGradient(defaultColor) },
   text: { color: defaultColor, gradient: createDefaultGradient(defaultColor) },
+  title: { color: defaultColor, gradient: createDefaultGradient(defaultColor) },
   background: { color: defaultColor, gradient: createDefaultGradient(defaultColor) },
 };
 
@@ -76,6 +80,8 @@ export const useThemeContext = () => useContext(ThemeContext);
 
 // 背景樣式轉換
 export function getBackgroundCss(colorPart: ColorPart): string {
+  if (!colorPart) return "#ffffff";
+
   const { gradient } = colorPart;
 
   if (gradient?.enabled && gradient.stops.length >= 2) {
@@ -99,12 +105,6 @@ export function getBackgroundCss(colorPart: ColorPart): string {
 
 export const ThemeProviderCustom: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [themeColors, setThemeColors] = useState<ThemeColors>(getInitialThemeColors);
-
-  // 自動同步儲存至 cookie
-  useEffect(() => {
-    Cookies.set("themeColors", JSON.stringify(themeColors), { expires: 365 });
-    console.log("✅ Cookie updated:", themeColors);
-  }, [themeColors]);
 
   // 動態建立 MUI 主題，包含背景與文字
   const theme = useMemo(

@@ -27,7 +27,7 @@ import { GradientStopsEditor } from './GradientStopsEditor';
 import type { GradientStop } from './GradientStopsEditor';
 import styles from './ThemeSetting.module.css';
 
-type ThemeParts = 'sidebar' | 'topbar' | 'box' | 'text' | 'background';
+type ThemeParts = 'sidebar' | 'topbar' | 'box' | 'boxBackground' | 'text' | 'title' | 'background';
 type GradientType = 'linear' | 'radial' | 'repeating-linear';
 
 const ThemeSetting: React.FC = () => {
@@ -60,7 +60,6 @@ const ThemeSetting: React.FC = () => {
 
   // 初始化本地狀態
   useEffect(() => {
-    console.log('Initializing theme settings for:', selectedPart);
     const part = themeColors[selectedPart];
     if (!part) return;
     const gradient = part.gradient;
@@ -143,9 +142,9 @@ const ThemeSetting: React.FC = () => {
   return (
     <Box
       className={styles.themeContainer}
-      style={{ color: getBackgroundCss(themeColors.text), transition: 'all 0.3s ease' }}
+      style={{ color: getBackgroundCss(themeColors.text), background: getBackgroundCss(themeColors.box), transition: 'all 0.3s ease' }}
     >
-      <Typography variant="h4" className={styles.title}>
+      <Typography variant="h4" className={styles.title} style={{ color: getBackgroundCss(themeColors.title) }}>
         主題顏色設定
       </Typography>
 
@@ -155,11 +154,13 @@ const ThemeSetting: React.FC = () => {
           value={selectedPart}
           onChange={(e) => setSelectedPart(e.target.value as ThemeParts)}
         >
-          <MenuItem value="sidebar">Sidebar</MenuItem>
-          <MenuItem value="topbar">Topbar</MenuItem>
-          <MenuItem value="box">Box</MenuItem>
+          <MenuItem value="title">Title</MenuItem>
           <MenuItem value="text">Text</MenuItem>
+          <MenuItem value="topbar">Topbar</MenuItem>
+          <MenuItem value="sidebar">Sidebar</MenuItem>
           <MenuItem value="background">Background</MenuItem>
+          <MenuItem value="boxBackground">Box Background</MenuItem>
+          <MenuItem value="box">Box</MenuItem>
         </Select>
       </FormControl>
 

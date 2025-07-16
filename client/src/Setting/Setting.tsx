@@ -36,7 +36,7 @@ const SettingPage: React.FC = () => {
           p: 2,
           boxShadow: "2px 0 5px rgba(0,0,0,0.05)",
           overflowY: "auto",
-          color: "text.primary",
+          color: getBackgroundCss(themeColors.text),
           background: getBackgroundCss(themeColors.sidebar),
         }}
       >
@@ -44,7 +44,7 @@ const SettingPage: React.FC = () => {
           variant="h6"
           fontWeight="bold"
           gutterBottom
-          sx={{ letterSpacing: 1, color: "primary.main" }}
+          sx={{ letterSpacing: 1, color: getBackgroundCss(themeColors.title) }}
         >
           設定功能
         </Typography>
@@ -99,7 +99,7 @@ const SettingPage: React.FC = () => {
             borderRadius: 3,
             bgcolor: "background.paper",
             boxShadow: "0 8px 16px rgba(0,0,0,0.12)",
-            background: getBackgroundCss(themeColors.box),
+            background: getBackgroundCss(themeColors.boxBackground),
           }}
         >
           <Outlet />

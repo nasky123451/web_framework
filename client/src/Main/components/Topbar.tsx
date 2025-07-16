@@ -20,7 +20,7 @@ const Topbar: React.FC = () => {
       color: getBackgroundCss(themeColors.text),
        }} >
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography variant="h6" noWrap>
+        <Typography style={{ color: getBackgroundCss(themeColors.title)}} variant="h6" noWrap>
           My App
         </Typography>
         <IconButton color="inherit" onClick={handleSettingsClick}>
