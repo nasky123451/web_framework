@@ -4,7 +4,7 @@ import { AppBar, Toolbar, Typography, IconButton } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { useNavigate } from "react-router-dom";
 
-import { useThemeContext, getBackgroundCss } from "../../context/ThemeContext";
+import { useThemeContext, getBackgroundCss } from "../../../context/ThemeContext";
 
 const Topbar: React.FC = () => {
   const { themeColors } = useThemeContext();

@@ -8,17 +8,18 @@ import {
   Divider,
 } from "@mui/material";
 import { Menu as MenuIcon } from "@mui/icons-material";
-import { useThemeContext, getBackgroundCss } from "../../context/ThemeContext";
+import { useThemeContext, getBackgroundCss } from "../../../context/ThemeContext";
+import { SidebarProvider, useSidebar } from '../../../context/SidebarContext';
+
 
 import { menuItems } from "./Menu";
 import MenuItemComponent from "./MenuItemComponent";
 
 import { styled } from "@mui/material/styles";
-import styles from "./index.module.css";
 
 const Sidebar: React.FC = () => {
   const { themeColors } = useThemeContext();
-  const [collapsed, setCollapsed] = useState(false);
+  const { collapsed, toggleCollapsed } = useSidebar();
   const [openKeys, setOpenKeys] = useState<Set<string>>(new Set());
 
   const drawerWidth = collapsed ? 60 : 240;
@@ -58,7 +59,7 @@ const Sidebar: React.FC = () => {
       <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.2)' }} />
       <HeaderBox collapsed={collapsed}>
         <IconButton
-          onClick={() => setCollapsed((prev) => !prev)}
+          onClick={toggleCollapsed}
           sx={{ color: "inherit" }}
           size="small"
         >
@@ -69,25 +70,27 @@ const Sidebar: React.FC = () => {
   );
 
   return (
-    <Drawer variant="permanent" className={styles.drawerPaper} sx={drawerStyle}>
-      <Toolbar />
-      <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-        <Box sx={{ flexGrow: 1, px: collapsed ? 0 : 2, pt: 2 }}>
-          <List disablePadding>
-            {menuItems.map((item) => (
-              <MenuItemComponent
-                key={item.label}
-                item={item}
-                collapsed={collapsed}
-                openKeys={openKeys}
-                onToggle={handleToggleOpen}
-              />
-            ))}
-          </List>
+    <SidebarProvider>
+      <Drawer variant="permanent" sx={drawerStyle}>
+        <Toolbar />
+        <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+          <Box sx={{ flexGrow: 1, px: collapsed ? 0 : 2, pt: 2 }}>
+            <List disablePadding>
+              {menuItems.map((item) => (
+                <MenuItemComponent
+                  key={item.label}
+                  item={item}
+                  collapsed={collapsed}
+                  openKeys={openKeys}
+                  onToggle={handleToggleOpen}
+                />
+              ))}
+            </List>
+          </Box>
+          {footer}
         </Box>
-        {footer}
-      </Box>
-    </Drawer>
+      </Drawer>
+    </SidebarProvider>
   );
 };
 
