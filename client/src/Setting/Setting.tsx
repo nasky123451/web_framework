@@ -15,7 +15,7 @@ import FullHeightFlexProps from "./FullHeightFlex.tsx";
 
 const menuItems = [
   { label: "主題設定", path: "theme" },
-  // 你可以加更多設定頁面
+  { label: "模式設定", path: "mode" },
 ];
 
 const SettingPage: React.FC = () => {
@@ -54,7 +54,7 @@ const SettingPage: React.FC = () => {
             <ListItemButton
               key={path}
               component={NavLink}
-              to={path}
+              to={`/settings/${path}`}
               sx={{
                 borderRadius: 1,
                 mb: 1,
@@ -83,7 +83,6 @@ const SettingPage: React.FC = () => {
           flexGrow: 1,
           p: 3,
           overflowY: "auto",
-          bgcolor: "#e9eef3",
           display: "flex",
           justifyContent: "center",
           alignItems: "flex-start",
@@ -94,10 +93,8 @@ const SettingPage: React.FC = () => {
           elevation={3}
           sx={{
             width: "100%",
-            maxWidth: 900,
             p: 4,
             borderRadius: 3,
-            bgcolor: "background.paper",
             boxShadow: "0 8px 16px rgba(0,0,0,0.12)",
             background: getBackgroundCss(themeColors.boxBackground),
           }}

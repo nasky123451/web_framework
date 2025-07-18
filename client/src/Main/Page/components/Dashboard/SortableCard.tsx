@@ -49,6 +49,7 @@ export const SortableCard: React.FC<SortableCardProps> = ({
     cursor: 'grab',
     userSelect: 'none',
     boxSizing: 'border-box',
+    willChange: 'transform',
   };
 
   const idStr = String(id);
@@ -78,13 +79,13 @@ export const SortableCard: React.FC<SortableCardProps> = ({
 
         {/* Resize handle */}
         <Box
-  className={styles.cornerResizeHandle}
-  onMouseDown={(e) => onResizeStart?.(id, e)}
->
-  <div></div>
-  <div></div>
-  <div></div>
-</Box>
+          className={styles.cornerResizeHandle}
+          onMouseDown={(e) => onResizeStart?.(id, e)}
+        >
+          <div></div>
+          <div></div>
+          <div></div>
+        </Box>
       </Card>
     </Box>
   );

@@ -1,0 +1,66 @@
+.container {
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .standardContent {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: padding-left 0.3s ease;
+  }
+  
+  .standardContentInner {
+    flex-grow: 1;
+    padding-top: 64px;
+    padding-left: 16px;
+    padding-right: 16px;
+    overflow-y: auto;
+  }
+  
+  .assistantContent {
+    height: 100vh;
+    position: relative;
+    overflow-y: auto;
+    padding: 16px;
+  }
+  
+  .robotButton {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    user-select: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    z-index: 1500;
+  }
+  
+  .robotButton:hover {
+    transform: scale(1.15);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+  }
+  
+  .robotButtonActive {
+    transform: scale(1.1);
+  }
+  
+  .interactionBox {
+    position: fixed;
+    bottom: 120px;
+    right: 24px;
+    width: 320px;
+    max-height: 60vh;
+    background-color: var(--MuiPaper-root-background);
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);
+    border-radius: 24px;
+    padding: 24px;
+    overflow-y: auto;
+    z-index: 1600;
+  }
+  

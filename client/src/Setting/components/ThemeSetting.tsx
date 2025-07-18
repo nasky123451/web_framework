@@ -22,9 +22,9 @@ import {
 import { Tune as TuneIcon } from '@mui/icons-material';
 import Cookies from 'js-cookie';
 import { useThemeContext, getBackgroundCss } from '../../context/ThemeContext';
-import { TechHexColorPicker } from './TechHexColorPicker';
-import { GradientStopsEditor } from './GradientStopsEditor';
-import type { GradientStop } from './GradientStopsEditor';
+import { TechHexColorPicker } from './Theme/TechHexColorPicker';
+import { GradientStopsEditor } from './Theme/GradientStopsEditor';
+import type { GradientStop } from './Theme/GradientStopsEditor';
 import styles from './ThemeSetting.module.css';
 
 type ThemeParts = 'sidebar' | 'topbar' | 'box' | 'boxBackground' | 'text' | 'title' | 'background';

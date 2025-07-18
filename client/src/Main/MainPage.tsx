@@ -3,15 +3,28 @@ import {
   Typography,
   CircularProgress,
   Box,
+  Fade,
 } from '@mui/material';
 import Topbar from './Page/components/Topbar';
 import Sidebar from './Page/components/Sidebar';
+import RobotInteraction from './Page/components/RobotInteraction'; 
 import { Outlet } from 'react-router-dom';
 import { useThemeContext, getBackgroundCss } from '../context/ThemeContext';
+import { useSidebar } from '../context/SidebarContext';
+import { useMode } from '../context/ModeContext';
+import robotImage from '../image/robot.png';
 
-const DashboardPage: React.FC = () => {
+import styles from './index.module.css';
+
+const MainPage: React.FC = () => {
   const { themeColors } = useThemeContext();
+  const { getSidebarWidth } = useSidebar();
+  const { mode } = useMode();
+
+  const drawerWidth = getSidebarWidth();
+
   const [loading, setLoading] = useState(true);
+  const [robotOpen, setRobotOpen] = useState(false);
 
   useEffect(() => {
     setLoading(false);
@@ -20,29 +33,43 @@ const DashboardPage: React.FC = () => {
   if (loading) return <CircularProgress />;
 
   return (
-    <Box sx={{ display: 'flex', height: '100vh', width: '100vw', overflow: 'auto' }}>
-      <Sidebar />
-  
-      {/* 右側主內容區：上下結構 */}
-      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
-        <Topbar /> {/* fixed */}
-  
-        {/* 下方內容區，必須要有 overflowY: 'auto'，才能內部滾動 */}
+    <>
+      {mode === 'standard' && (
+        <>
+          <Sidebar />
+          <Box
+            className={styles.standardContent}
+            style={{ paddingLeft: `${drawerWidth}px`, background: getBackgroundCss(themeColors.background) }}
+          >
+            <Topbar />
+            <Box className={styles.standardContentInner}>
+              <Outlet />
+            </Box>
+          </Box>
+        </>
+      )}
+
+      {mode === 'assistant' && (
         <Box
-          sx={{
-            flexGrow: 1,
-            overflowY: 'auto',
-            background: getBackgroundCss(themeColors.background),
-            paddingTop: '64px', // 避開被 fixed 的 Topbar 蓋住的部分
-            paddingX: 2,
-            boxSizing: 'border-box',
-          }}
+          className={styles.assistantContent}
         >
           <Outlet />
+
+          {/* 右下角機器人 */}
+          <Box
+            component="img"
+            src={robotImage}
+            alt="機器助手"
+            onClick={() => setRobotOpen(!robotOpen)}
+            className={`${styles.robotButton} ${robotOpen ? styles.robotButtonActive : ''}`}
+          />
+
+          {/* 互動視窗 */}
+          <RobotInteraction open={robotOpen} />
         </Box>
-      </Box>
-    </Box>
+      )}
+    </>
   );
 };
 
-export default DashboardPage;
+export default MainPage;

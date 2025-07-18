@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Typography, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import { DraggableCardGrid } from './components/Dashboard/Draggable';
 import PageTitle from './components/PageTitle';
 import { getBackgroundCss, useThemeContext } from '../../context/ThemeContext';
@@ -12,19 +12,17 @@ const Dashboard: React.FC = () => {
     async function fetchData() {
       return ['Alice', 'Bob', 'Carol'];
     }
-    fetchData().then((d) => {
-      setData(d);
-    });
+    fetchData().then((d) => setData(d));
   }, []);
 
   return (
-    <>
+    <Box>
       <PageTitle title="Dashboard Overview" />
 
-      <Box sx={{ width: '100%' }}>
+      <Box sx={{ flexGrow: 1, width: '100%', overflow: 'auto' }}>
         <DraggableCardGrid data={data} />
       </Box>
-    </>
+    </Box>
   );
 };
 

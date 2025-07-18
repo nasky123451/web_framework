@@ -23,8 +23,10 @@
     flex-wrap: wrap;
     gap: 16px;
     width: 100%;
-    padding: 16px;
     box-sizing: border-box;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    align-items: flex-start;
+    position: relative; 
   }
   
   .gridItem {

@@ -9,10 +9,12 @@ import {
   type UniqueIdentifier,
   type DragOverEvent,
   MeasuringStrategy,
+  rectIntersection,
 } from '@dnd-kit/core';
 import {
   SortableContext,
   arrayMove,
+  verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import {
   Box,
@@ -112,21 +114,21 @@ export const DraggableCardGrid: React.FC<DraggableCardGridProps> = ({ data, onOr
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={closestCenter}
+      collisionDetection={rectIntersection}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
       measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
     >
-      <SortableContext items={items}>
+      <SortableContext items={items} strategy={verticalListSortingStrategy}>
         <Box  className={styles.gridContainer}>
             {items.map((id, index) => {
             return (
-                <SortableCard
-                    id={id}
-                    width={sizes[id]?.width || defaultCardSize.width}
-                    height={sizes[id]?.height || defaultCardSize.height}
-                    onResizeStart={handleResizeStart}
-                />
+              <SortableCard
+                  id={id}
+                  width={sizes[id]?.width || defaultCardSize.width}
+                  height={sizes[id]?.height || defaultCardSize.height}
+                  onResizeStart={handleResizeStart}
+              />
             );
             })}
         </Box>
