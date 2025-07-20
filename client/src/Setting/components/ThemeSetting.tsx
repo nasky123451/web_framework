@@ -21,7 +21,7 @@ import {
 } from '@mui/material';
 import { Tune as TuneIcon } from '@mui/icons-material';
 import Cookies from 'js-cookie';
-import { useThemeContext, getBackgroundCss } from '../../context/ThemeContext';
+import { useThemeContext, getColorCss } from '../../context/ThemeContext';
 import { TechHexColorPicker } from './Theme/TechHexColorPicker';
 import { GradientStopsEditor } from './Theme/GradientStopsEditor';
 import type { GradientStop } from './Theme/GradientStopsEditor';
@@ -142,9 +142,9 @@ const ThemeSetting: React.FC = () => {
   return (
     <Box
       className={styles.themeContainer}
-      style={{ color: getBackgroundCss(themeColors.text), background: getBackgroundCss(themeColors.box), transition: 'all 0.3s ease' }}
+      style={{ color: getColorCss(themeColors.text), background: getColorCss(themeColors.box), transition: 'all 0.3s ease' }}
     >
-      <Typography variant="h4" className={styles.title} style={{ color: getBackgroundCss(themeColors.title) }}>
+      <Typography variant="h4" className={styles.title} style={{ color: getColorCss(themeColors.title) }}>
         主題顏色設定
       </Typography>
 

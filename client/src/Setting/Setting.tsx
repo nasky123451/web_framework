@@ -9,7 +9,7 @@ import {
   Divider,
   Paper,
 } from "@mui/material";
-import { useThemeContext, getBackgroundCss } from "../context/ThemeContext";
+import { useThemeContext, getColorCss } from "../context/ThemeContext";
 
 import FullHeightFlexProps from "./FullHeightFlex.tsx";
 
@@ -36,15 +36,15 @@ const SettingPage: React.FC = () => {
           p: 2,
           boxShadow: "2px 0 5px rgba(0,0,0,0.05)",
           overflowY: "auto",
-          color: getBackgroundCss(themeColors.text),
-          background: getBackgroundCss(themeColors.sidebar),
+          color: getColorCss(themeColors.text),
+          background: getColorCss(themeColors.sidebar),
         }}
       >
         <Typography
           variant="h6"
           fontWeight="bold"
           gutterBottom
-          sx={{ letterSpacing: 1, color: getBackgroundCss(themeColors.title) }}
+          sx={{ letterSpacing: 1, color: getColorCss(themeColors.title) }}
         >
           設定功能
         </Typography>
@@ -86,7 +86,7 @@ const SettingPage: React.FC = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "flex-start",
-          background: getBackgroundCss(themeColors.background),
+          background: getColorCss(themeColors.background),
         }}
       >
         <Paper
@@ -96,7 +96,7 @@ const SettingPage: React.FC = () => {
             p: 4,
             borderRadius: 3,
             boxShadow: "0 8px 16px rgba(0,0,0,0.12)",
-            background: getBackgroundCss(themeColors.boxBackground),
+            background: getColorCss(themeColors.boxBackground),
           }}
         >
           <Outlet />

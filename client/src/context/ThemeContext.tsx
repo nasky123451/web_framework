@@ -79,7 +79,7 @@ const ThemeContext = createContext<ThemeContextType>({
 export const useThemeContext = () => useContext(ThemeContext);
 
 // 背景樣式轉換
-export function getBackgroundCss(colorPart: ColorPart): string {
+export function getColorCss(colorPart: ColorPart): string {
   if (!colorPart) return "#ffffff";
 
   const { gradient } = colorPart;

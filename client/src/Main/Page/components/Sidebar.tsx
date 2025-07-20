@@ -8,7 +8,7 @@ import {
   Divider,
 } from "@mui/material";
 import { Menu as MenuIcon } from "@mui/icons-material";
-import { useThemeContext, getBackgroundCss } from "../../../context/ThemeContext";
+import { useThemeContext, getColorCss } from "../../../context/ThemeContext";
 import { useSidebar } from '../../../context/SidebarContext';
 
 
@@ -53,10 +53,11 @@ const Sidebar: React.FC = () => {
     zIndex: 1200,
     [`& .MuiDrawer-paper`]: {
       width: drawerWidth,
-      background: getBackgroundCss(themeColors.sidebar),
-      color: getBackgroundCss(themeColors.text),
+      background: getColorCss(themeColors.sidebar),
+      color: getColorCss(themeColors.text),
       position: 'relative',
       transition: 'width 0.3s ease',
+      overflowX: 'hidden',
     },
   };
 

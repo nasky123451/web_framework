@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 
 export const SIDEBAR_WIDTH_COLLAPSED = 60;
-export const SIDEBAR_WIDTH_EXPANDED = 200;
+export const SIDEBAR_WIDTH_EXPANDED = 170;
 
 interface SidebarContextType {
   collapsed: boolean;

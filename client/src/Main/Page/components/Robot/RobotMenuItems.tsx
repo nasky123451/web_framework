@@ -4,7 +4,7 @@ import {
     ArrowForward as ArrowForwardIcon,
   } from '@mui/icons-material';
 
-  import type { MenuItemType } from './Menu';
+  import type { MenuItemType } from '../Menu';
   
   import type { NavigateFunction } from 'react-router-dom';
   

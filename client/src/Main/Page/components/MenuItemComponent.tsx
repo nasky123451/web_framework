@@ -42,8 +42,8 @@ const MenuItemComponent: React.FC<MenuItemComponentProps> = ({
 
   const content = (
     <>
-      {item.icon && <ListItemIcon sx={{ color: "inherit" }}>{item.icon}</ListItemIcon>}
-      {!collapsed && <ListItemText primary={item.label} />}
+      {item.icon && <ListItemIcon sx={{ color: "inherit", minWidth: '30px' }}>{item.icon}</ListItemIcon>}
+      {!collapsed && <ListItemText sx={{minWidth: '70px'}} primary={item.label} />}
       {!collapsed && hasChildren && (isOpen ? <ExpandLess /> : <ExpandMore />)}
     </>
   );

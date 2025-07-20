@@ -11,7 +11,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { UniqueIdentifier } from '@dnd-kit/core';
 
-import { getBackgroundCss, useThemeContext } from '../../../../context/ThemeContext';
+import { getColorCss, useThemeContext } from '../../../../context/ThemeContext';
 import styles from './index.module.css';
 
 type SortableCardProps = {
@@ -61,7 +61,7 @@ export const SortableCard: React.FC<SortableCardProps> = ({
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          background: getBackgroundCss(themeColors.box),
+          background: getColorCss(themeColors.box),
           border: '1px solid rgba(0,0,0,0.1)',
           overflow: 'hidden',
         }}

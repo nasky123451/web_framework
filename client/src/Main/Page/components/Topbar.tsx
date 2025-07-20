@@ -4,7 +4,7 @@ import { AppBar, Toolbar, Typography, IconButton } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { useNavigate } from "react-router-dom";
 
-import { useThemeContext, getBackgroundCss } from "../../../context/ThemeContext";
+import { useThemeContext, getColorCss } from "../../../context/ThemeContext";
 
 const Topbar: React.FC = () => {
   const { themeColors } = useThemeContext();
@@ -16,11 +16,11 @@ const Topbar: React.FC = () => {
   return (
     <AppBar position="fixed" sx={{ 
       zIndex: (theme) => theme.zIndex.drawer + 1, 
-      background: getBackgroundCss(themeColors.topbar),
-      color: getBackgroundCss(themeColors.text),
+      background: getColorCss(themeColors.topbar),
+      color: getColorCss(themeColors.text),
        }} >
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography style={{ color: getBackgroundCss(themeColors.title)}} variant="h6" noWrap>
+        <Typography style={{ color: getColorCss(themeColors.title)}} variant="h6" noWrap>
           My App
         </Typography>
         <IconButton color="inherit" onClick={handleSettingsClick}>

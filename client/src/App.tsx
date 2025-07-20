@@ -8,14 +8,14 @@ import SettingPage from "./Setting/Setting.tsx";
 import ThemeSetting from "./Setting/components/ThemeSetting.tsx";
 import ModeSetting from "./Setting/components/ModeSetting.tsx";
 
-import { useThemeContext, getBackgroundCss } from "./context/ThemeContext";
+import { useThemeContext, getColorCss } from "./context/ThemeContext";
 
 const App: React.FC = () => {
   const { themeColors } = useThemeContext();
 
   return (
     <>
-    <GlobalStyles styles={{ body: { background: getBackgroundCss(themeColors.background) } }} />
+    <GlobalStyles styles={{ body: { background: getColorCss(themeColors.background) } }} />
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />

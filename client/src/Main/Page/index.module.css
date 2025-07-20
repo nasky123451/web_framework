@@ -1,0 +1,40 @@
+.dashboardContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: var(--MuiPaper-root-background); /* 透過 JS 設定 inline style */
+}
+
+.dashboardContent {
+  flex-grow: 1;
+  overflow: auto;
+  padding: 16px; /* 相當於 MUI 的 spacing(2) */
+}
+
+.floatingItem {
+  position: fixed;
+  right: 16px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 3000;
+  min-width: 240px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  padding: 4px;
+}
+
+.floatingItem:nth-child(1) { top: 100px; }
+.floatingItem:nth-child(2) { top: 160px; }
+.floatingItem:nth-child(3) { top: 220px; }
+.floatingItem:nth-child(4) { top: 280px; }
+/* 可視需要繼續增加 top 座標 */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(2px);
+}
+

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Box, Typography, Fade, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { getRobotMenuItems } from './robotMenuItems';
+import { getRobotMenuItems } from './RobotMenuItems';
 import RobotGoToDialog from './RobotGoToDialog';
-import { menuItems as mainMenuItems } from "./Menu";
-import { useThemeContext, getBackgroundCss } from '../../../context/ThemeContext';
+import { menuItems as mainMenuItems } from "../Menu";
+import { useThemeContext, getColorCss } from '../../../../context/ThemeContext';
 import styles from './index.module.css';
 
 interface RobotInteractionProps {
@@ -33,7 +33,7 @@ const RobotInteraction: React.FC<RobotInteractionProps> = ({
   return (
     <>
       <Fade in={open} unmountOnExit>
-        <Box style={{ color: getBackgroundCss(themeColors.text) }} className={styles.interactionBox}>
+        <Box style={{ color: getColorCss(themeColors.text) }} className={styles.interactionBox}>
           <Typography variant="h6" className={styles.title}>
             請問您想要做什麼？
           </Typography>

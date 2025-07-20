@@ -19,6 +19,7 @@
     "@iconify/icons-mdi": "^1.2.48",
     "@mui/icons-material": "^7.2.0",
     "@mui/material": "^7.2.0",
+    "framer-motion": "^12.23.6",
     "js-cookie": "^3.0.5",
     "lodash.debounce": "^4.0.8",
     "prop-types": "^15.8.1",
