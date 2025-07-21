@@ -36,8 +36,6 @@ interface ThemeContextType {
   setThemeColors: React.Dispatch<React.SetStateAction<ThemeColors>>;
 }
 
-const defaultColor = "#ffffff";
-
 const createDefaultGradient = (baseColor: string): MyGradient => ({
   enabled: false,
   from: baseColor,
@@ -50,13 +48,34 @@ const createDefaultGradient = (baseColor: string): MyGradient => ({
 });
 
 const defaultColors: ThemeColors = {
-  sidebar: { color: defaultColor, gradient: createDefaultGradient(defaultColor) },
-  topbar: { color: defaultColor, gradient: createDefaultGradient(defaultColor) },
-  box: { color: defaultColor, gradient: createDefaultGradient(defaultColor) },
-  boxBackground: { color: defaultColor, gradient: createDefaultGradient(defaultColor) },
-  text: { color: defaultColor, gradient: createDefaultGradient(defaultColor) },
-  title: { color: defaultColor, gradient: createDefaultGradient(defaultColor) },
-  background: { color: defaultColor, gradient: createDefaultGradient(defaultColor) },
+  sidebar: {
+    color: "#1e293b", 
+    gradient: createDefaultGradient("#1e293b"),
+  },
+  topbar: {
+    color: "#0f172a", 
+    gradient: createDefaultGradient("#0f172a"),
+  },
+  box: {
+    color: "#f8fafc", 
+    gradient: createDefaultGradient("#f8fafc"),
+  },
+  boxBackground: {
+    color: "#e2e8f0", 
+    gradient: createDefaultGradient("#e2e8f0"),
+  },
+  text: {
+    color: "#fecace", 
+    gradient: createDefaultGradient("#0f172a"),
+  },
+  title: {
+    color: "#fecace", 
+    gradient: createDefaultGradient("#fecace"),
+  },
+  background: {
+    color: "#f1f5f9", 
+    gradient: createDefaultGradient("#f1f5f9"),
+  },
 };
 
 const getInitialThemeColors = (): ThemeColors => {

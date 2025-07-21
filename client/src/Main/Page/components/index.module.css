@@ -1,0 +1,79 @@
+.cardContainer {
+    position: relative;
+    overflow: hidden;
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    background: linear-gradient(135deg, #f8f9fb, #e6ecf0);
+  }
+  
+  .backgroundOverlay {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/watermark.svg'); /* 可用 svg 浮水印 logo */
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  .closeButton {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 2;
+  }
+  
+  .profileLayout {
+    display: flex;
+    flex-direction: row;
+    z-index: 1;
+  }
+  
+  .leftPanel {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-right: 16px;
+    border-right: 1px dashed #ccc;
+  }
+  
+  .avatarWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .name {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  
+  .id {
+    font-size: 0.95rem;
+    color: #777;
+  }
+  
+  .rightPanel {
+    flex: 1;
+    padding-left: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+  }
+  
+  .infoItem {
+    font-size: 1rem;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  

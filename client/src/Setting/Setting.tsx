@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet, NavLink } from "react-router-dom";
+import { Outlet, NavLink, useMatch, useResolvedPath } from "react-router-dom";
 import {
   Box,
   List,
@@ -9,13 +9,32 @@ import {
   Divider,
   Paper,
 } from "@mui/material";
+import clsx from "clsx";
 import { useThemeContext, getColorCss } from "../context/ThemeContext";
 
 import FullHeightFlexProps from "./FullHeightFlex.tsx";
 
+import styles from "./index.module.css";
+
+const CustomNavItem = ({ label, path }: { label: string; path: string }) => {
+  const resolved = useResolvedPath(`/settings/${path}`);
+  const match = useMatch({ path: resolved.pathname, end: true });
+
+  return (
+    <ListItemButton
+      component={NavLink}
+      to={`/settings/${path}`}
+      className={clsx(styles.navItem, match && styles.active)}
+    >
+      <ListItemText primary={label} />
+    </ListItemButton>
+  );
+};
+
 const menuItems = [
   { label: "主題設定", path: "theme" },
   { label: "模式設定", path: "mode" },
+  { label: "關於本系統", path: "about" },
 ];
 
 const SettingPage: React.FC = () => {
@@ -23,79 +42,40 @@ const SettingPage: React.FC = () => {
 
   return (
     <FullHeightFlexProps>
-      {/* 左側選單 */}
       <Box
         component="nav"
-        sx={{
-          width: 280,
-          bgcolor: "background.paper",
-          borderRight: 1,
-          borderColor: "divider",
-          display: "flex",
-          flexDirection: "column",
-          p: 2,
-          boxShadow: "2px 0 5px rgba(0,0,0,0.05)",
-          overflowY: "auto",
+        className={styles.nav}
+        style={{
           color: getColorCss(themeColors.text),
           background: getColorCss(themeColors.sidebar),
         }}
       >
         <Typography
           variant="h6"
-          fontWeight="bold"
-          gutterBottom
-          sx={{ letterSpacing: 1, color: getColorCss(themeColors.title) }}
+          className={styles.title}
+          sx={{ color: getColorCss(themeColors.title) }}
         >
           設定功能
         </Typography>
         <Divider sx={{ mb: 2 }} />
-        <List sx={{ flexGrow: 1 }}>
+        <List className={styles.list}>
           {menuItems.map(({ label, path }) => (
-            <ListItemButton
-              key={path}
-              component={NavLink}
-              to={`/settings/${path}`}
-              sx={{
-                borderRadius: 1,
-                mb: 1,
-                "&.active": {
-                  bgcolor: "primary.main",
-                  color: "primary.contrastText",
-                  fontWeight: "bold",
-                  boxShadow: "0 0 8px rgba(25,118,210,0.5)",
-                },
-                "&:hover": {
-                  bgcolor: "primary.light",
-                  color: "primary.contrastText",
-                },
-              }}
-            >
-              <ListItemText primary={label} />
-            </ListItemButton>
+            <CustomNavItem key={path} label={label} path={path} />
           ))}
         </List>
       </Box>
 
-      {/* 右側內容區 */}
       <Box
         component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          overflowY: "auto",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "flex-start",
+        className={styles.main}
+        style={{
           background: getColorCss(themeColors.background),
         }}
       >
         <Paper
           elevation={3}
-          sx={{
-            width: "100%",
-            p: 4,
-            borderRadius: 3,
-            boxShadow: "0 8px 16px rgba(0,0,0,0.12)",
+          className={styles.paper}
+          style={{
             background: getColorCss(themeColors.boxBackground),
           }}
         >

@@ -7,6 +7,7 @@ import Dashboard from "./Main/Page/Dashboard.tsx";
 import SettingPage from "./Setting/Setting.tsx";
 import ThemeSetting from "./Setting/components/ThemeSetting.tsx";
 import ModeSetting from "./Setting/components/ModeSetting.tsx";
+import About from "./Setting/components/About";
 
 import { useThemeContext, getColorCss } from "./context/ThemeContext";
 
@@ -22,6 +23,7 @@ const App: React.FC = () => {
         <Route path="/settings/*" element={<SettingPage />}>
           <Route path="theme" element={<ThemeSetting />} />
           <Route path="mode" element={<ModeSetting />} />
+          <Route path="about" element={<About />} />
         </Route>
         <Route path="/" element={<MainPage />} >
           <Route index element={<Dashboard />} />

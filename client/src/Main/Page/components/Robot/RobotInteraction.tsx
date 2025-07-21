@@ -3,32 +3,35 @@ import { Box, Typography, Fade, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { getRobotMenuItems } from './RobotMenuItems';
 import RobotGoToDialog from './RobotGoToDialog';
+import UserProfileDialog from '../UserProfileDialog';
 import { menuItems as mainMenuItems } from "../Menu";
 import { useThemeContext, getColorCss } from '../../../../context/ThemeContext';
 import styles from './index.module.css';
 
 interface RobotInteractionProps {
   open: boolean;
-  onProfileClick?: () => void;
   onSettingsClick?: () => void;
   onNavigateClick?: () => void;
 }
 
 const RobotInteraction: React.FC<RobotInteractionProps> = ({
   open,
-  onProfileClick,
   onSettingsClick,
 }) => {
   const { themeColors } = useThemeContext();
   const navigate = useNavigate();
   const [goToOpen, setGoToOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+
+  const handleProfileClick = () => setProfileOpen(true);
 
   const menuItems = getRobotMenuItems(
-    navigate,           // 直接傳入 navigate 函式
-    onProfileClick,
+    navigate,
+    handleProfileClick,
     onSettingsClick,
     () => setGoToOpen(true)
   );
+  
 
   return (
     <>
@@ -59,6 +62,8 @@ const RobotInteraction: React.FC<RobotInteractionProps> = ({
         onClose={() => setGoToOpen(false)}
         menuItems={mainMenuItems}
         />
+
+        <UserProfileDialog open={profileOpen} onClose={() => setProfileOpen(false)} />
     </>
   );
 };
