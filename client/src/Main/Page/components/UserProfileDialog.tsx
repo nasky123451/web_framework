@@ -9,21 +9,72 @@ import {
   Tooltip,
   TextField,
 } from '@mui/material';
+import {
+    DndContext,
+    closestCenter,
+    PointerSensor,
+    useSensor,
+    useSensors,
+  } from '@dnd-kit/core';
+  import {
+    SortableContext,
+    useSortable,
+    arrayMove,
+    verticalListSortingStrategy,
+    defaultAnimateLayoutChanges,
+  } from '@dnd-kit/sortable';
+  import { CSS } from '@dnd-kit/utilities';
 import CloseIcon from '@mui/icons-material/Close';
 import InfoIcon from '@mui/icons-material/InfoOutlined';
 import EditableText from './User/EditableText';
 import SlideGrowTransition from './User/SlideGrowTransition';
 import InfoItem from './User/InfoItem';
 import { styled } from '@mui/material/styles';
-import {
-    SortableDynamicField,
-    SortableCustomField,
-    handleDragEnd,
-    DynamicField,
-    CustomField,
-  } from './User/FieldSortables';
 import { useThemeContext, getColorCss } from '../../../context/ThemeContext';
-import robot from '../../../image/15644664-fe18-4f90-9a6d-7286ee87ebe8.15644664-fe17-4af9-86a8-90c6e7b27621.jpeg';
+import photo from '../../../image/15644664-fe18-4f90-9a6d-7286ee87ebe8.15644664-fe17-4af9-86a8-90c6e7b27621.jpeg';
+
+  const SortableFieldRow = ({
+    field,
+    onChange,
+    children,
+  }: {
+    field: DynamicField;
+    onChange: (key: string, value: string) => void;
+    children: React.ReactNode;
+  }) => {
+    const {
+      attributes,
+      listeners,
+      setNodeRef,
+      transform,
+      transition,
+      isDragging,
+    } = useSortable({
+      id: field.key,
+      animateLayoutChanges: defaultAnimateLayoutChanges,
+    });
+  
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+      zIndex: isDragging ? 10 : 'auto',
+    };
+  
+    return (
+      <Box
+        ref={setNodeRef}
+        style={style}
+        {...attributes}
+        {...listeners}
+        sx={{
+          gridColumn: field.key === 'address' ? 'span 2' : undefined,
+          cursor: 'grab',
+        }}
+      >
+        {children}
+      </Box>
+    );
+  };
 
 interface CustomField {
   id: number;
@@ -67,9 +118,8 @@ const UserProfileDialog: React.FC<UserProfileDialogProps> = ({ open, onClose }) 
   const { themeColors } = useThemeContext();
 
   const [dynamicFields, setDynamicFields] = useState<DynamicField[]>([]);
-
-  // sensors
   const sensors = useSensors(useSensor(PointerSensor));
+
   const [titleInfo, setTitleInfo] = useState({
     name: '林君翰',
     id: 'A123456789',
@@ -172,6 +222,17 @@ const UserProfileDialog: React.FC<UserProfileDialogProps> = ({ open, onClose }) 
     );
   };
 
+  const handleDynamicFieldDragEnd = (event: any) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+  
+    setDynamicFields((fields) => {
+      const oldIndex = fields.findIndex((f) => f.key === active.id);
+      const newIndex = fields.findIndex((f) => f.key === over.id);
+      return arrayMove(fields, oldIndex, newIndex);
+    });
+  };
+
   return (
     <Dialog
       open={open}
@@ -219,7 +280,7 @@ const UserProfileDialog: React.FC<UserProfileDialogProps> = ({ open, onClose }) 
             gap={1}
             sx={{ userSelect: 'none' }}
           >
-            <LargeAvatar src={robot} />
+            <LargeAvatar src={photo} />
             <EditableText
               value={titleInfo.name}
               onChange={(v) => handleTitleChange('name', v)}
@@ -241,34 +302,46 @@ const UserProfileDialog: React.FC<UserProfileDialogProps> = ({ open, onClose }) 
   
           {/* Right side: info fields */}
           <Box display="grid" gridTemplateColumns={{ xs: '1fr', sm: '1fr 1fr' }} gap={2}>
-          {dynamicFields.map(({ key, label, value }) => {
-            const isBirthday = key === 'birthday';
-            const days = isBirthday ? daysUntilBirthday(value) : null;
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDynamicFieldDragEnd}
+            >
+            <SortableContext
+                items={dynamicFields.map((f) => f.key)}
+                strategy={verticalListSortingStrategy}
+            >
+                {dynamicFields.map((field) => {
+                const { key, label, value } = field;
+                const isBirthday = key === 'birthday';
+                const days = isBirthday ? daysUntilBirthday(value) : null;
 
-            return (
-                <Box key={key} gridColumn={key === 'address' ? 'span 2' : undefined}>
-                <InfoItem
-                    label={label}
-                    value={value}
-                    onChange={(v) => handleFieldChange(key, v)}
-                    validate={(v) => {
-                    if (key === 'email') return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-                    if (key === 'phone') return /^[\d\-+() ]{7,20}$/.test(v);
-                    if (key === 'birthday') return !isNaN(new Date(v).getTime());
-                    return v.length > 0;
-                    }}
-                    fullWidth={key === 'address'}
-                    extra={
-                    isBirthday && days != null ? (
-                        <Tooltip title={`距離生日還有 ${days} 天`}>
-                        <InfoIcon color={days <= 7 ? 'warning' : 'info'} />
-                        </Tooltip>
-                    ) : undefined
-                    }
-                />
-                </Box>
-            );
-            })}
+                return (
+                    <SortableFieldRow key={key} field={field} onChange={handleFieldChange}>
+                    <InfoItem
+                        label={label}
+                        value={value}
+                        onChange={(v) => handleFieldChange(key, v)}
+                        validate={(v) => {
+                        if (key === 'email') return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+                        if (key === 'phone') return /^[\d\-+() ]{7,20}$/.test(v);
+                        if (key === 'birthday') return !isNaN(new Date(v).getTime());
+                        return v.length > 0;
+                        }}
+                        fullWidth={key === 'address'}
+                        extra={
+                        isBirthday && days != null ? (
+                            <Tooltip title={`距離生日還有 ${days} 天`}>
+                            <InfoIcon color={days <= 7 ? 'warning' : 'info'} />
+                            </Tooltip>
+                        ) : undefined
+                        }
+                    />
+                    </SortableFieldRow>
+                );
+                })}
+            </SortableContext>
+            </DndContext>
   
             {/* 自訂欄位區塊 */}
             {customFields.map(({ id, label, value }) => (

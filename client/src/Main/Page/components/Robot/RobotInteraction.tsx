@@ -25,11 +25,19 @@ const RobotInteraction: React.FC<RobotInteractionProps> = ({
 
   const handleProfileClick = () => setProfileOpen(true);
 
+  const handleLogout = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    navigate('/login');
+  };
+  
+
   const menuItems = getRobotMenuItems(
     navigate,
     handleProfileClick,
     onSettingsClick,
-    () => setGoToOpen(true)
+    () => setGoToOpen(true),
+    handleLogout
   );
   
 
