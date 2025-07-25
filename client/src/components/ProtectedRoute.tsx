@@ -7,30 +7,26 @@ import { useThemeContext, getColorCss } from '../context/ThemeContext';
 interface ProtectedRouteProps {
   children: React.ReactNode;
   redirectTo?: string;
+  disableAuthCheck?: boolean;
 }
 
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
-  children, 
-  redirectTo = "/login" 
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  children,
+  redirectTo = "/login",
+  disableAuthCheck = true,  // 建議預設為 false
 }) => {
   const { user, isLoading } = useAuthContext();
-  const { themeColors } = useThemeContext();
 
-  if (isLoading) {
+  if (disableAuthCheck) {
+    // 直接顯示內容，不跳轉
     return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-          background: getColorCss(themeColors.background),
-        }}
-      >
-        <CircularProgress />
-      </Box>
+      <>{children}</>
     );
   }
 
-  return user ? <>{children}</> : <Navigate to={redirectTo} replace />;
+  return user ? (
+    <>{children}</>
+  ) : (
+    <Navigate to={redirectTo} replace />
+  );
 };

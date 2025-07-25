@@ -59,7 +59,7 @@ const ErrorFallback: React.FC<{ error?: Error; resetError: () => void }> = ({
         alignItems: 'center',
         justifyContent: 'center',
         height: '100vh',
-        padding: 3,
+        width: '100%',
         background: getColorCss(themeColors.background),
       }}
     >
