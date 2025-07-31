@@ -1,10 +1,10 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  define: {
-    global: 'window', // 將 global 指向 window
-  },
+  server: {
+    host: '0.0.0.0', // 開放所有 IP 存取
+    port: 5173       // 預設 port
+  }
 })
